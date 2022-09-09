@@ -27,6 +27,9 @@ class Listing(models.Model):
 
     submit_bid = models.DecimalField(max_digits = 10, decimal_places = 2, validators = [MinValueValidator(0.01)])
 
+    class Meta:
+        ordering = ('-end_time',)
+        
     def __str__(self):
         return f"Listing #{self.id}: {self.item_name} ({self.user.username})"
     
