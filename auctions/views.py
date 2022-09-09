@@ -5,13 +5,23 @@ from django.shortcuts import render
 from django.urls import reverse
 from django.utils import timezone
 
-from .models import User, Listing
+from .models import User, Listing, Bid
+from django.forms import ModelForm
 
 """
 Forms:
 """
 
-
+#Form for placing bids:
+class BidForm(ModelForm):
+    class Meta:
+        model = Bid
+        fields = ['amount']
+    
+    def __init__(self, *args, **kwargs):
+        super(BidForm, self).__init__(*args, **kwargs)
+        for visible in self.visible_fields():
+            visible.field.widget.attrs['class'] = 'form-control m-2'
 
 """
 Views:
@@ -98,6 +108,35 @@ def listing(request, id):
     #context["comment_form"] = CommentForm()
 
     return render(request, "auctions/listing.html", context)
+
+def toggle_watchlist(request, id):
+    if request.method == "POST":
+        listing = Listing.objects.get(id=id)
+        watchlist = request.user.watchlist
+        if listing in watchlist.all():
+            watchlist.remove(listing)
+        else:
+            watchlist.add(listing)
+    
+    return HttpResponseRedirect(reverse('listing', args={'id:id'}))
+
+def bid(request, id):
+    bid_form = BidForm(request.POST or None)
+    
+    if bid_form.is_valid():
+        listing = Listing.objects.get(id=id)
+        user = request.user
+        new_bid = bid_form.save(commit=False)
+        existing_bids = Bid.objects.filter(listing=listing)
+        highest_bid_check = all(new_bid.amount > n.amount for n in existing_bids)
+        not_highest = new_bid.amount >= listing.initial_bid
+
+        if highest_bid_check and not_highest:
+            new_bid.listing = listing
+            new_bid.user = request.user
+            new_bid.save()
+    
+    return HttpResponseRedirect(reverse('listing', args={'id': id}))
 
 def categories(request):
     return render(request, "auctions/categories.html")

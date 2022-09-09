@@ -1,1 +1,41 @@
 {% extends "auctions/layout.html" %}
+{% load mathfilters %}
+
+{% block title %} {{ listing.item_name }} {% endblock %}
+
+{% block body %}
+    <h1>Listing: {{ auction.item_name }}</h1>
+    
+    <!-- Watchlist -->
+    {% if request.user.is_authenticated %}
+    <div class="my-3">
+        <form action="{% url 'toggle_watchlist' auction.id %}" method="POST">
+            {% csrf_token %}
+            {% if listing in request.user.watchlist.all %}
+                <input class="btn btn-secondary btn-sm" type="submit" value="Remove from Watchlist">
+            {% else %}
+                <input type="btn btn-secondary btn-sm" type="submit" value="Add to Watchlist">
+            {% endif %}
+        </form>
+    </div>
+    {% endif %}
+
+    <!-- Checking if auction has ended and displaying the remaining time -->
+    {% if ended %}
+        <div><b>This auction has ended</b></div>
+    {% else %}
+        <div>Time Left: <b>{{ days }} days {{ hours }} hours {{ minutes }} minutes</b></div>
+        <div>Auction ends at: <b>{{ listing.end_time }}</b></div>
+    {% endif %}
+
+    <!-- Checking for picture or setting the default one -->
+    <img src="{{ listing.image.url }}" style="max-width: 100;" alt="picture">
+    
+    <p> {{ listing.item_description }}</p>
+    <hr>
+
+    <h3>
+        $
+        BIDS TODO
+    </h3>
+{% endblock %}

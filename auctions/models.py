@@ -27,9 +27,6 @@ class Listing(models.Model):
 
     submit_bid = models.DecimalField(max_digits = 10, decimal_places = 2, validators = [MinValueValidator(0.01)])
 
-    class Meta:
-        ordering = ('-end_time',)
-        
     def __str__(self):
         return f"Listing #{self.id}: {self.item_name} ({self.user.username})"
     
@@ -53,4 +50,9 @@ class Comment(models.Model):
 """
 
 class Bid(models.Model):
-    pass
+    amount = models.DecimalField(max_digits= 10, decimal_places= 2)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="bids")
+    listing = models.ForeignKey(Listing, on_delete=models.CASCADE, related_name="bids")
+
+def __str__(self):
+    return f"Bid #{self.id}: {self.amount} on {self.listing.item_name} by {self.username}"
