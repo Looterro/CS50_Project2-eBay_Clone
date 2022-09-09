@@ -3,10 +3,19 @@ from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
+from django.utils import timezone
 
-from .models import User
+from .models import User, Listing
+
+"""
+Forms:
+"""
 
 
+
+"""
+Views:
+"""
 def index(request):
     return render(request, "auctions/index.html")
 
@@ -61,14 +70,37 @@ def register(request):
     else:
         return render(request, "auctions/register.html")
 
+def create_listing(request):
+    return render(request, "auctions/create_listing.html")
+
+# Display a listing:
+def listing(request, id):
+    #Verify that listing exsists:
+    try:
+        listing = Listing.objects.get(id=id)
+    except:
+        return HttpResponse("Entry does not exist")
+    
+    context = {}
+    context["listing"] = listing
+    context["ended"] = False
+    
+    if listing.is_finished():
+        context["ended"] = True
+        return render(request, "auctions/auction.html", context)
+    
+    # Calculate remaining time:
+    time_remaining = listing.end_time - timezone.now()
+    context["days"] = time_remaining.days
+    context["hours"] = int(time_remaining.seconds/3600)
+    context["minutes"] = int(time_remaining.seconds/60 - (context["hours"] * 60))
+    #context["bid_form"] = BidForm()
+    #context["comment_form"] = CommentForm()
+
+    return render(request, "auctions/listing.html", context)
+
 def categories(request):
     return render(request, "auctions/categories.html")
 
 def watchlist(request):
     return render(request, "auctions/watchlist.html")
-
-def create_listing(request):
-    return render(request, "auctions/create.html")
-
-def listing(request):
-    return render(request, "auctions/listing.html")
