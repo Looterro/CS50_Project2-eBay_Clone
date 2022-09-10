@@ -9,7 +9,13 @@ class User(AbstractUser):
        return f"{self.username}"
 
 class Category(models.Model):
-    pass
+    name = models.CharField(max_length = 64)
+
+    def __str__(self):
+        return f"{self.name}"
+    
+    def active_categories(self):
+        return Listing.objects.filter(category=self).count()
 
 class Listing(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='listings')
@@ -41,13 +47,11 @@ class Listing(models.Model):
         else:
             return False
 
-"""
 class Comment(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    listing = models.ForeignKey(Listing, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="comments")
+    listing = models.ForeignKey(Listing, on_delete=models.CASCADE, related_name="comments")
     message = models.TextField(max_length = 256)
     time = models.DateTimeField(auto_now_add=True)
-"""
 
 class Bid(models.Model):
     amount = models.DecimalField(max_digits= 10, decimal_places= 2)

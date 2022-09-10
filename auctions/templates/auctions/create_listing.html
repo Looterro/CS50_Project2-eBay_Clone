@@ -2,4 +2,13 @@
 
 {% block body %}
 <h2>Create New Listing</h2>
+    <form method="POST" action="{% url 'create_listing' %}" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="form-group">
+            <table>
+                {{ form.as_table }}
+            </table>
+            <input type="submit" value="save">
+        </div>
+    </form>
 {% endblock %}
