@@ -1,0 +1,35 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+    <h2>Category: {{ category }}</h2>
+    <div class="flex-column">
+        {% for listing in listings %}
+            <div class="card mb-3" style="max-width: 100%">
+                <div class="row no-gutters"> 
+                    <div class="col-4">
+                        <img src="{{ listing.picture.url }}" style="max-width: 100%;" alt="picture">
+                    </div>
+                    <div class="col-8">
+                        <div class="card-body">
+                            <h4><a href="{% url 'listing' listing.id %}">{{ listing.item_name }}</a></h4>
+                            <h5 class="my-2">
+                                {% if listing.bids.all.count > 0 %}
+                                    $ {{ listing.bids.first.amount }}
+                                {% else %}
+                                    $ {{ listing.initial_bid }}
+                                {% endif %}
+                            </h5>
+                            <br>
+                            <p>{{ listing.item_description }}</p>
+                            <small class="card-text muted">
+                                Ends {{ listing.end_time }}
+                            </small>
+                            <br>
+                            <a href="{% url 'category' listing.category %}"><span class="badge badge-secondary badge-pill"> {{ listing.category }} </span></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}
