@@ -1,11 +1,10 @@
-from xml.etree.ElementTree import Comment
 from django.contrib.auth import authenticate, login, logout
 from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 from django.utils import timezone
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from .models import User, Listing, Bid, Category, Comment
 from django.forms import ModelForm
@@ -34,7 +33,7 @@ class ListingForm(ModelForm):
     def __init__(self, *args, **kwargs):
         super(ListingForm, self).__init__(*args, **kwargs)
         for visible in self.visible_fields():
-            visible.field.widget.attrs['class'] = 'form-control m-2'
+            visible.field.widget.attrs['class'] = 'form-control'
 
 # Form for submitting comments:
 class CommentForm(ModelForm):
@@ -150,10 +149,10 @@ def create_listing(request):
 def listing_close(request, id):
     listing = Listing.objects.get(id=id)
     if request.user == listing.user:
-        listing_ended_manually = True
+        listing.ended_manually = True
         listing.save()
     
-    return HttpResponseRedirect(reverse('listing', args={"id": id}))
+    return HttpResponseRedirect(reverse('listing', kwargs={"id": id}))
 
 # Adds or removes listing to user's watchlist after clicking the watchlist button: 
 def toggle_watchlist(request, id):
@@ -165,7 +164,7 @@ def toggle_watchlist(request, id):
         else:
             watchlist.add(listing)
     
-    return HttpResponseRedirect(reverse('listing', args={'id:id'}))
+    return HttpResponseRedirect(reverse('listing', kwargs={"id":id}))
 
 # Places the bid after submitting the value and returns to the same listing with updated data:
 def bid(request, id):
@@ -184,7 +183,7 @@ def bid(request, id):
             new_bid.user = request.user
             new_bid.save()
     
-    return HttpResponseRedirect(reverse('listing', args={'id': id}))
+    return HttpResponseRedirect(reverse('listing', kwargs={'id': id}))
 
 # Filters listings by category and displays category in category view page:
 def category(request, name):
@@ -208,10 +207,26 @@ def listing_comment(request, id):
         new_comment.user = request.user
         new_comment.save()
 
-    return HttpResponseRedirect(reverse("listing", args={"id": id}))
+    return HttpResponseRedirect(reverse("listing", kwargs={"id": id}))
 
 def categories(request):
     return render(request, "auctions/categories.html")
 
 def watchlist(request):
-    return render(request, "auctions/watchlist.html")
+    return render(request, "auctions/watchlist.html", {
+        "listings": request.user.watchlist.all(),
+        "title": "Your Watchlist"
+    })
+# Action after clicking the button for submitting the comment and saving it:
+def auction_comment(request, id):
+    comment_form = CommentForm(request.POST or None)
+
+    # Add comment to database:
+    if comment_form.is_valid():
+        new_comment = comment_form.save(commit=False)
+        new_comment.listing = Listing.objects.get(id=id)
+        new_comment.user = request.user
+        new_comment.save()
+    
+    return HttpResponseRedirect(reverse('auction', kwargs={"id": id}))
+    

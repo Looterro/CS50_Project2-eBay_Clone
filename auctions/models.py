@@ -11,6 +11,9 @@ class User(AbstractUser):
 class Category(models.Model):
     name = models.CharField(max_length = 64)
 
+    class Meta:
+        ordering = ('name',)
+
     def __str__(self):
         return f"{self.name}"
     
@@ -30,6 +33,9 @@ class Listing(models.Model):
     end_time = models.DateTimeField()
     ended_manually = models.BooleanField(default = False)
     listing_duration = models.IntegerField(choices=((1, "One Day"), (3, "Three Days"), (7, "One week")))
+
+    class Meta:
+        ordering = ('end_time',)
 
     def __str__(self):
         return f"Listing #{self.id}: {self.item_name} ({self.user.username})"
@@ -51,10 +57,19 @@ class Comment(models.Model):
     message = models.TextField(max_length = 256)
     time = models.DateTimeField(auto_now_add=True)
 
+    class Meta:
+        ordering = ('time',)
+
+    def __str__(self):
+        return f"Comment #{self.id}: {self.user.username} on {self.listing.item_name}: {self.message}"
+
 class Bid(models.Model):
     amount = models.DecimalField(max_digits= 10, decimal_places= 2)
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="bids")
     listing = models.ForeignKey(Listing, on_delete=models.CASCADE, related_name="bids")
+
+    class Meta:
+        ordering = ('-amount',)
 
 def __str__(self):
     return f"Bid #{self.id}: {self.amount} on {self.listing.item_name} by {self.username}"
