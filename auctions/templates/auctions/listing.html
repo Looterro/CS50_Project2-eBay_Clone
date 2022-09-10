@@ -44,9 +44,10 @@
     </h3>
     <!-- Display users auction bids on given listing -->
     Bids: {{ listing.bids.all.count }}
-    {% if auction.bids.first.user == request.user %}
+    <br>
+    {% if listing.bids.first.user == request.user %}
         {% if not ended %}
-            Your bid is the current bid.
+            <strong>Your bid is the current bid</strong>
         {% else %}
             <strong>You won the auction!</strong>
         {% endif %}

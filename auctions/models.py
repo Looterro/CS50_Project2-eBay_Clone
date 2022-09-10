@@ -17,6 +17,7 @@ class Category(models.Model):
     def __str__(self):
         return f"{self.name}"
     
+    @property
     def active_categories(self):
         return Listing.objects.filter(category=self).count()
 

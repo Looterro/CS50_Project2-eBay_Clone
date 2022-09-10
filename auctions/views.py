@@ -53,7 +53,11 @@ Views:
 """
 # Renders a list of all active auctions:
 def index(request):
-    return render(request, "auctions/index.html")
+    active_listings = Listing.objects.filter(ended_manually=False, end_time__gte = datetime.now())
+    return render(request, "auctions/index.html", {
+        "listings": active_listings,
+        "title": "Active Listings"
+    })
 
 def login_view(request):
     if request.method == "POST":
@@ -188,9 +192,9 @@ def bid(request, id):
 # Filters listings by category and displays category in category view page:
 def category(request, name):
     category = Category.objects.get(name=name)
-    listings = Listing.object.filter(category = category, ended_manually = False, end_time__gte=datetime.now())
+    listings = Listing.objects.filter(category = category, ended_manually = False, end_time__gte=datetime.now())
     
-    return render(request, "listings/category.html", {
+    return render(request, "auctions/category.html", {
         "listings": listings,
         "title": category.name,
         "category": category.name
@@ -210,10 +214,12 @@ def listing_comment(request, id):
     return HttpResponseRedirect(reverse("listing", kwargs={"id": id}))
 
 def categories(request):
-    return render(request, "auctions/categories.html")
+    return render(request, "auctions/categories.html", {
+        "categories": Category.objects.all()
+    })
 
 def watchlist(request):
-    return render(request, "auctions/watchlist.html", {
+    return render(request, "auctions/index.html", {
         "listings": request.user.watchlist.all(),
         "title": "Your Watchlist"
     })
