@@ -107,19 +107,6 @@ def register(request):
     else:
         return render(request, "auctions/register.html")
 
-# Renders page with new auction listing form:
-def create_listing(request):
-    form = ListingForm(request.POST or None)
-    if form.is_valid():
-        new_listing = form.save(commit = False)
-        new_listing.user = request.user
-        new_listing.save()
-        return HttpResponseRedirect(reverse('auction', args={"id": new_listing.id}))
-    else:
-        return render(request, "auctions/create_listing.html", {
-            'form': form
-        })
-
 # Display a listing:
 def listing(request, id):
     #Verify that listing exsists:
@@ -134,7 +121,7 @@ def listing(request, id):
     
     if listing.is_finished():
         context["ended"] = True
-        return render(request, "auctions/auction.html", context)
+        return render(request, "auctions/listing.html", context)
     
     # Calculate remaining time:
     time_remaining = listing.end_time - timezone.now()
@@ -145,6 +132,19 @@ def listing(request, id):
     context["comment_form"] = CommentForm()
 
     return render(request, "auctions/listing.html", context)
+
+# Renders page with new auction listing form:
+def create_listing(request):
+    form = ListingForm(request.POST or None, request.FILES or None)
+    if form.is_valid():
+        new_listing = form.save(commit = False)
+        new_listing.user = request.user
+        new_listing.save()
+        return HttpResponseRedirect(reverse('listing', kwargs={"id": new_listing.id}))
+    else:
+        return render(request, "auctions/create_listing.html", {
+            'form': form
+        })
 
 # Action after clicking the button for ending auction early, redirects to the same listing:
 def listing_close(request, id):
@@ -208,7 +208,7 @@ def listing_comment(request, id):
         new_comment.user = request.user
         new_comment.save()
 
-    return HttpResponseRedirect(reverse("auction", args={"id": id}))
+    return HttpResponseRedirect(reverse("listing", args={"id": id}))
 
 def categories(request):
     return render(request, "auctions/categories.html")

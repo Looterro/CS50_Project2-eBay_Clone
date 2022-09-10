@@ -31,8 +31,6 @@ class Listing(models.Model):
     ended_manually = models.BooleanField(default = False)
     listing_duration = models.IntegerField(choices=((1, "One Day"), (3, "Three Days"), (7, "One week")))
 
-    submit_bid = models.DecimalField(max_digits = 10, decimal_places = 2, validators = [MinValueValidator(0.01)])
-
     def __str__(self):
         return f"Listing #{self.id}: {self.item_name} ({self.user.username})"
     
