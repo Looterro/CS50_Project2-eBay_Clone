@@ -1,7 +1,7 @@
 # CS50_Project2-eBay_Clone
 Harvard CS50 Project 2 - Ebay Clone
 
-This project was created as part of Harvard CS50 course. The project is an eBay clone and has following features:
+This project was created as part of Harvard CS50 course using Django framework. The project is an eBay clone and has following features:
 
 - Models: Application has models for users, auction listings, categories of listings, bids, and comments made on auction listings.
 
