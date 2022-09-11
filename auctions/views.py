@@ -122,7 +122,7 @@ def listing(request, id):
     context["listing"] = listing
     context["ended"] = False
     
-    if listing.is_finished():
+    if listing.is_finished:
         context["ended"] = True
         return render(request, "auctions/listing.html", context)
     

@@ -25,9 +25,15 @@
                             </h5>
                             <br>
                             <p>{{ listing.item_description }}</p>
-                            <small class="card-text muted">
-                                Ends {{ listing.end_time }}
-                            </small>
+                            {% if listing.is_finished %}
+                                <small class="card-text muted">
+                                    <b>This auction has ended</b>
+                                </small>
+                            {% else %}                    
+                                <small class="card-text muted">
+                                    Ends {{ listing.end_time }}
+                                </small>
+                            {% endif %}
                             <br>
                             <a href="{% url 'category' listing.category %}"><span class="badge badge-secondary badge-pill"> {{ listing.category }} </span></a>
                         </div>

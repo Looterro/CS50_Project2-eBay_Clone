@@ -46,6 +46,7 @@ class Listing(models.Model):
         self.end_time = self.start_time + timedelta(days=self.listing_duration)
         super().save(*args, **kwargs)
     
+    @property
     def is_finished(self):
         if self.ended_manually or self.end_time < timezone.now():
             return True
