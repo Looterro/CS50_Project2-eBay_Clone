@@ -22,6 +22,10 @@
                             <br>
                             <p>{{ listing.item_description }}</p>
                             <small class="card-text muted">
+                                Listed by <b><a href="{% url 'userview' listing.user %}">{{ listing.user }} </a></b>
+                            </small>
+                            <br>
+                            <small class="card-text muted">
                                 Ends {{ listing.end_time }}
                             </small>
                             <br>

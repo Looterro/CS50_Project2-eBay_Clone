@@ -197,7 +197,6 @@ def category(request, name):
     return render(request, "auctions/category.html", {
         "listings": listings,
         "title": category.name,
-        "category": category.name
     })
 
 # Action after submitting the comment:
@@ -236,3 +235,16 @@ def auction_comment(request, id):
     
     return HttpResponseRedirect(reverse('auction', kwargs={"id": id}))
     
+# Displays user page with all their past and current listings:
+def userview(request, name):
+    
+    # Check if user exists:
+    try:
+        user = User.objects.get(username=name)
+        listings = Listing.objects.filter(user = user)
+        return render(request, "auctions/userview.html", {
+        "listings": listings,
+        "title": user.username,
+        })
+    except:
+        return HttpResponse("User does not exist")

@@ -1,8 +1,12 @@
 {% extends "auctions/layout.html" %}
 
 {% block body %}
-    <h2>Category: {{ title }}</h2>
+    <h2>User: <strong>{{ title }}</strong></h2>
+    <br>
+    <h3 class="my-2"> All users listings: </h3>
+    <hr>
     <div class="flex-column">
+        <!-- Displays all the listings that user ever posted on the website -->
         {% for listing in listings %}
             <div class="card mb-3" style="max-width: 100%">
                 <div class="row no-gutters"> 
@@ -21,10 +25,6 @@
                             </h5>
                             <br>
                             <p>{{ listing.item_description }}</p>
-                            <small class="card-text muted">
-                                Listed by <b><a href="{% url 'userview' listing.user %}">{{ listing.user }} </a></b>
-                            </small>
-                            <br>
                             <small class="card-text muted">
                                 Ends {{ listing.end_time }}
                             </small>

@@ -68,7 +68,9 @@
 
     <h3>Details</h3>
     <ul>
-        <li>Listed by <b> {{ listing.user }} </b></li>
+        <!-- Redirects to user page, where all users listings are displayed -->
+        <li>Listed by <b><a href="{% url 'userview' listing.user %}">{{ listing.user }} </a></b></li>
+        <!-- Redirects to all listings by given category -->
         <li>
             Category:
             {% if listing.category %}
@@ -106,7 +108,7 @@
             {% for comment in listing.comments.all %}
                 <div class="border border-white p-1 col-12">
                     <div class="card p-3" style="border:none; box-shadow: 5px 6px 6px 2px #e9ecef; border-radius: 4px;">
-                        <h5 class="card-title"> {{ comment.user }} </h5>
+                        <h5 class="card-title"><a href="{% url 'userview' comment.user %}" style="color: black;">{{ comment.user }} </a></h5>
                         <h6 class="card-subtitle mb-2 text-muted"> {{ comment.time }} </h6>
                         {{ comment.message }}
                     </div>
