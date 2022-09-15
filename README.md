@@ -1,7 +1,9 @@
 # CS50_Project2-eBay_Clone
 Harvard CS50 Project 2 - Ebay Clone
 
-This project was created as part of Harvard CS50 course using Django framework. The project is an eBay clone and has following features:
+This project is an eBay clone and was created as part of Harvard CS50 course using Django framework.
+
+## Specification
 
 - Models: Application has models for users, auction listings, categories of listings, bids, and comments made on auction listings.
 
@@ -28,3 +30,22 @@ This project was created as part of Harvard CS50 course using Django framework. 
 - Userview: Users can visit a given user page where they can see all of the listings (past and present) submitted by this person.
 
 - Django Admin Interface: Via the Django admin interface, a site administrator should be able to view, add, edit, and delete any listings, comments, and bids made on the site.
+
+## Setup
+
+First, clone this repository:
+
+```bash
+git clone https://github.com/Looterro/CS50_Project2-eBay_Clone.git
+cd mail
+```
+
+Install Django:
+```bash
+python3 -m pip install Django
+```
+
+To run the development server:
+```bash
+python manage.py runserver
+```
