@@ -11,7 +11,7 @@ Clone this repository and change directory to commerce:
 
 ```bash
 git clone https://github.com/Looterro/CS50_Project2-eBay_Clone.git
-cd mail
+cd commerce
 ```
 
 Install Django:
