@@ -7,19 +7,19 @@ Link to Harvard CS50 Commerce Project Page: https://cs50.harvard.edu/web/2020/pr
 
 ## Setup
 
-First, clone this repository:
+Clone this repository and change directory to commerce:
 
 ```bash
 git clone https://github.com/Looterro/CS50_Project2-eBay_Clone.git
 cd mail
 ```
 
-Install Django in terminal:
+Install Django:
 ```bash
 python3 -m pip install Django
 ```
 
-To run the development server:
+Run the development server using command:
 ```bash
 python manage.py runserver
 ```
